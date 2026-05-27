@@ -85,10 +85,10 @@ ${desc}`;
         {/* Title 1 Block */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">Título 1</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">Título 1 (Clique na caixa para copiar)</span>
             <button
               onClick={() => handleCopyText(title1, 'title1')}
-              className={`inline-flex items-center gap-1 text-[11px] font-bold transition-colors ${
+              className={`inline-flex items-center gap-1 text-[11px] font-bold transition-colors cursor-pointer ${
                 copiedTitle1 ? 'text-emerald-600' : 'text-orange-500 hover:text-orange-650'
               }`}
             >
@@ -96,18 +96,24 @@ ${desc}`;
               <span>{copiedTitle1 ? "Copiado" : "Copiar"}</span>
             </button>
           </div>
-          <div className="p-3 bg-slate-50 border border-slate-200/60 rounded-xl font-mono text-xs text-slate-800 break-words flex items-center justify-between">
+          <div 
+            onClick={() => handleCopyText(title1, 'title1')}
+            className={`p-4 bg-slate-50 hover:bg-slate-100/70 border rounded-xl font-mono text-xs text-slate-800 break-words flex items-center justify-between cursor-pointer transition-all ${
+              copiedTitle1 ? 'border-emerald-550 bg-emerald-50/20 shadow-sm' : 'border-slate-200/65 hover:border-orange-300'
+            }`}
+          >
             <span>{title1}</span>
+            <Copy className={`w-3.5 h-3.5 flex-shrink-0 ml-4 transition-colors ${copiedTitle1 ? 'text-emerald-600' : 'text-slate-400'}`} />
           </div>
         </div>
 
         {/* Title 2 Block */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">Título 2</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">Título 2 (Clique na caixa para copiar)</span>
             <button
               onClick={() => handleCopyText(title2, 'title2')}
-              className={`inline-flex items-center gap-1 text-[11px] font-bold transition-colors ${
+              className={`inline-flex items-center gap-1 text-[11px] font-bold transition-colors cursor-pointer ${
                 copiedTitle2 ? 'text-emerald-600' : 'text-orange-500 hover:text-orange-650'
               }`}
             >
@@ -115,18 +121,24 @@ ${desc}`;
               <span>{copiedTitle2 ? "Copiado" : "Copiar"}</span>
             </button>
           </div>
-          <div className="p-3 bg-slate-50 border border-slate-200/60 rounded-xl font-mono text-xs text-slate-800 break-words flex items-center justify-between">
+          <div 
+            onClick={() => handleCopyText(title2, 'title2')}
+            className={`p-4 bg-slate-50 hover:bg-slate-100/70 border rounded-xl font-mono text-xs text-slate-800 break-words flex items-center justify-between cursor-pointer transition-all ${
+              copiedTitle2 ? 'border-emerald-550 bg-emerald-50/20 shadow-sm' : 'border-slate-200/65 hover:border-orange-300'
+            }`}
+          >
             <span>{title2}</span>
+            <Copy className={`w-3.5 h-3.5 flex-shrink-0 ml-4 transition-colors ${copiedTitle2 ? 'text-emerald-600' : 'text-slate-400'}`} />
           </div>
         </div>
 
         {/* Description Block */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">Descrição & Links</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">Descrição & Links (Clique na caixa para copiar)</span>
             <button
               onClick={() => handleCopyText(desc, 'desc')}
-              className={`inline-flex items-center gap-1 text-[11px] font-bold transition-colors ${
+              className={`inline-flex items-center gap-1 text-[11px] font-bold transition-colors cursor-pointer ${
                 copiedDesc ? 'text-emerald-600' : 'text-orange-500 hover:text-orange-650'
               }`}
             >
@@ -134,8 +146,16 @@ ${desc}`;
               <span>{copiedDesc ? "Copiada" : "Copiar Descrição"}</span>
             </button>
           </div>
-          <div className="p-4 bg-slate-50 border border-slate-200/60 rounded-xl font-mono text-xs text-slate-800 whitespace-pre-wrap leading-relaxed">
-            {desc}
+          <div 
+            onClick={() => handleCopyText(desc, 'desc')}
+            className={`p-4 bg-slate-50 hover:bg-slate-100/70 border rounded-xl font-mono text-xs text-slate-800 whitespace-pre-wrap leading-relaxed cursor-pointer transition-all relative group ${
+              copiedDesc ? 'border-emerald-550 bg-emerald-50/20 shadow-sm' : 'border-slate-200/65 hover:border-orange-300'
+            }`}
+          >
+            <div>{desc}</div>
+            <div className="absolute top-3 right-3 p-1 rounded bg-white border border-slate-150 text-slate-400 opacity-60 group-hover:opacity-100 transition-opacity">
+              <Copy className={`w-3.5 h-3.5 ${copiedDesc ? 'text-emerald-600' : 'text-slate-400'}`} />
+            </div>
           </div>
         </div>
       </div>
