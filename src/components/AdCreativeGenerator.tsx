@@ -31,7 +31,7 @@ export default function AdCreativeGenerator({ onShowToast }: AdCreativeGenerator
   const generateNewCreative = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/generate-creative-prompts', {
+      const response = await fetch('https://api.dulivi.com.br/api/generate-creative-prompts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });

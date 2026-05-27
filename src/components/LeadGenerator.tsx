@@ -44,7 +44,7 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
   const fetchLeads = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/generate-leads', {
+      const response = await fetch('https://api.dulivi.com.br/api/generate-leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
