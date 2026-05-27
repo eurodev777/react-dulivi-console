@@ -1,0 +1,6 @@
+{
+  "name": "Dulivi - Painel de Marketing",
+  "description": "Painel de marketing e prospecção de leads para o SaaS Dulivi, incluindo copiador de copys, gerador de criativos dinâmicos com IA e gerador de leads de cidades.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
