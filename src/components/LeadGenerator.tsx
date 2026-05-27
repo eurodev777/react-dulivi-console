@@ -1,15 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Search, MapPin, RefreshCw, Copy, Check, Users, ShieldAlert, FileText, ClipboardCopy } from 'lucide-react';
-import { LeadData, CityLead } from '../types';
+import React, { useState, useEffect } from "react";
+import {
+  Search,
+  MapPin,
+  RefreshCw,
+  Copy,
+  Check,
+  Users,
+  ShieldAlert,
+  FileText,
+  ClipboardCopy,
+} from "lucide-react";
+import { LeadData, CityLead } from "../types";
 
 interface LeadGeneratorProps {
-  onShowToast: (message: string, type: 'success' | 'info') => void;
+  onShowToast: (message: string, type: "success" | "info") => void;
 }
 
 export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
   const [loading, setLoading] = useState(false);
   const [leadData, setLeadData] = useState<LeadData | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [copiedCityIndex, setCopiedCityIndex] = useState<number | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
 
@@ -18,41 +28,125 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
     state: "São Paulo",
     uf: "SP",
     cities: [
-      { name: "São Paulo", metric: "Metrópole gigante, +40 mil pizzarias e miguelarias." },
-      { name: "Campinas", metric: "Grande polo tecnológico e acadêmico, alto delivery." },
-      { name: "Santos", metric: "Litoral populoso com forte consumo noturno de lanches." },
-      { name: "São José dos Campos", metric: "Polo industrial do Vale do Paraíba, ticket médio alto." },
-      { name: "Ribeirão Preto", metric: "Capital do agronegócio e forte rede de gastronomia regional." },
-      { name: "Sorocaba", metric: "Crescimento contínuo de lanchonetes de bairro e residenciais." },
-      { name: "Santo André", metric: "Região do ABC paulista próspera com alta lanchonetes." },
-      { name: "São Bernardo do Campo", metric: "Demanda industrial robusta por almoço e janta rápidos." },
-      { name: "Osasco", metric: "Grande comércio central e densidade demográfica expressiva." },
-      { name: "Guarulhos", metric: "Segunda maior cidade do estado com alta taxa de lanches rápidos." },
-      { name: "Piracicaba", metric: "Grande circulação de estudantes universitários ativos." },
-      { name: "Jundiaí", metric: "IDH muito alto e público adepto a lanches gourmet e artesanais." },
-      { name: "Mogi das Cruzes", metric: "Área metropolitana em expansão veloz com novos restaurantes." },
-      { name: "Bauru", metric: "Polo de educação do interior com forte demanda por pizzas de zap." },
-      { name: "Barueri", metric: "Bairro nobre de Alphaville com consumo de alto ticket de delivery." },
-      { name: "São José do Rio Preto", metric: "Indústrias alimentícias prósperas no noroeste paulista." },
-      { name: "Taubaté", metric: "Polo universitário próspero com cultura forte de lanches do zap." },
-      { name: "Limeira", metric: "Forte indústria e rotina de pedidos em lanchonetes locais." },
-      { name: "Praia Grande", metric: "Polo turístico do litoral com giro alto de pedidos de pizza." },
-      { name: "Indaiatuba", metric: "Destaque de IDH e mercado nobre aberto a soluções modernas." }
-    ]
+      {
+        name: "São Paulo",
+        metric: "Metrópole gigante, +40 mil pizzarias e miguelarias.",
+      },
+      {
+        name: "Campinas",
+        metric: "Grande polo tecnológico e acadêmico, alto delivery.",
+      },
+      {
+        name: "Santos",
+        metric: "Litoral populoso com forte consumo noturno de lanches.",
+      },
+      {
+        name: "São José dos Campos",
+        metric: "Polo industrial do Vale do Paraíba, ticket médio alto.",
+      },
+      {
+        name: "Ribeirão Preto",
+        metric: "Capital do agronegócio e forte rede de gastronomia regional.",
+      },
+      {
+        name: "Sorocaba",
+        metric: "Crescimento contínuo de lanchonetes de bairro e residenciais.",
+      },
+      {
+        name: "Santo André",
+        metric: "Região do ABC paulista próspera com alta lanchonetes.",
+      },
+      {
+        name: "São Bernardo do Campo",
+        metric: "Demanda industrial robusta por almoço e janta rápidos.",
+      },
+      {
+        name: "Osasco",
+        metric: "Grande comércio central e densidade demográfica expressiva.",
+      },
+      {
+        name: "Guarulhos",
+        metric:
+          "Segunda maior cidade do estado com alta taxa de lanches rápidos.",
+      },
+      {
+        name: "Piracicaba",
+        metric: "Grande circulação de estudantes universitários ativos.",
+      },
+      {
+        name: "Jundiaí",
+        metric:
+          "IDH muito alto e público adepto a lanches gourmet e artesanais.",
+      },
+      {
+        name: "Mogi das Cruzes",
+        metric: "Área metropolitana em expansão veloz com novos restaurantes.",
+      },
+      {
+        name: "Bauru",
+        metric:
+          "Polo de educação do interior com forte demanda por pizzas de zap.",
+      },
+      {
+        name: "Barueri",
+        metric:
+          "Bairro nobre de Alphaville com consumo de alto ticket de delivery.",
+      },
+      {
+        name: "São José do Rio Preto",
+        metric: "Indústrias alimentícias prósperas no noroeste paulista.",
+      },
+      {
+        name: "Taubaté",
+        metric:
+          "Polo universitário próspero com cultura forte de lanches do zap.",
+      },
+      {
+        name: "Limeira",
+        metric: "Forte indústria e rotina de pedidos em lanchonetes locais.",
+      },
+      {
+        name: "Praia Grande",
+        metric: "Polo turístico do litoral com giro alto de pedidos de pizza.",
+      },
+      {
+        name: "Indaiatuba",
+        metric: "Destaque de IDH e mercado nobre aberto a soluções modernas.",
+      },
+    ],
   };
 
   const fetchLeads = async () => {
     setLoading(true);
+  
     try {
-      const response = await fetch('https://api.dulivi.com.br/api/generate-leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const data: LeadData = await response.json();
-      setLeadData(data);
+      const response = await fetch(
+        'https://api.dulivi.com.br/api/generate-leads',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      const result = await response.json();
+  
+      console.log('API RESULT:', result);
+  
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Erro na API');
+      }
+  
+      setLeadData(result.data);
     } catch (error) {
       console.error(error);
-      onShowToast("Erro na API da Gemini. Carregando lista de São Paulo como fallback.", "info");
+  
+      onShowToast(
+        'Erro ao carregar leads. Usando fallback.',
+        'info'
+      );
+  
       setLeadData(fallbackLeads);
     } finally {
       setLoading(false);
@@ -68,7 +162,10 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
     try {
       await navigator.clipboard.writeText(cityName);
       setCopiedCityIndex(index);
-      onShowToast(`Cidade "${cityName}" copiada para a área de transferência!`, "success");
+      onShowToast(
+        `Cidade "${cityName}" copiada para a área de transferência!`,
+        "success"
+      );
       setTimeout(() => setCopiedCityIndex(null), 1500);
     } catch (err) {
       onShowToast("Erro ao copiar. Copie manualmente os dados.", "info");
@@ -79,22 +176,26 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
   const handleCopyAll = async () => {
     if (!leadData) return;
     try {
-      const allNames = leadData.cities.map(c => c.name).join(', ');
+      const allNames = leadData?.cities.map((c) => c.name).join(", ");
       await navigator.clipboard.writeText(allNames);
       setCopiedAll(true);
-      onShowToast(`Lista completa com as 20 cidades do estado copiada!`, "success");
+      onShowToast(
+        `Lista completa com as 20 cidades do estado copiada!`,
+        "success"
+      );
       setTimeout(() => setCopiedAll(false), 2000);
     } catch (err) {
       onShowToast("Erro ao copiar dados para a planilha.", "info");
     }
   };
 
-  const filteredCities = leadData
-    ? leadData.cities.filter(city =>
-        city.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        city.metric.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
+  const safeCities = Array.isArray(leadData?.cities) ? leadData.cities : [];
+
+  const filteredCities = safeCities.filter(
+    (city) =>
+      city.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      city.metric?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="bg-white/60 border border-slate-100 rounded-2xl p-6 md:p-8 shadow-sm">
@@ -109,7 +210,8 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
             </h2>
           </div>
           <p className="text-slate-500 text-xs md:text-sm mt-1">
-            Escolhe automaticamente estados promissores do Brasil e mapeia 20 grandes polos de lanches para prospecção da Dulivi.
+            Escolhe automaticamente estados promissores do Brasil e mapeia 20
+            grandes polos de lanches para prospecção da Dulivi.
           </p>
         </div>
 
@@ -118,7 +220,7 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
           disabled={loading}
           className="inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-50 font-semibold py-2.5 px-4 rounded-xl text-xs sm:text-sm transition-all duration-300 shadow-sm cursor-pointer hover:shadow-md"
         >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           <span>GERAR OUTRA LISTA</span>
         </button>
       </div>
@@ -132,7 +234,9 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
                 {leadData.uf || "SP"}
               </div>
               <div>
-                <span className="text-[10px] text-emerald-650 font-bold uppercase tracking-wide">Estado Selecionado</span>
+                <span className="text-[10px] text-emerald-650 font-bold uppercase tracking-wide">
+                  Estado Selecionado
+                </span>
                 <h3 className="text-base font-bold text-slate-800 leading-tight">
                   {leadData.state}
                 </h3>
@@ -144,7 +248,9 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
                 <Users className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[10px] text-blue-600 font-bold uppercase tracking-wide">Público Filtrado</span>
+                <span className="text-[10px] text-blue-600 font-bold uppercase tracking-wide">
+                  Público Filtrado
+                </span>
                 <h3 className="text-sm font-semibold text-slate-800">
                   Alta População e Delivery Exponencial
                 </h3>
@@ -153,8 +259,12 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
 
             <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex items-center justify-between gap-4">
               <div className="space-y-1">
-                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Mapeamento Geográfico</span>
-                <div className="text-xs text-slate-600 font-medium font-mono">{leadData.cities.length} Cidades Listadas</div>
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wide">
+                  Mapeamento Geográfico
+                </span>
+                <div className="text-xs text-slate-600 font-medium font-mono">
+                  {leadData?.cities.length} Cidades Listadas
+                </div>
               </div>
 
               <button
@@ -162,8 +272,8 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
                 onClick={handleCopyAll}
                 className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all duration-300 ${
                   copiedAll
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 shadow-sm cursor-pointer'
+                    ? "bg-emerald-600 text-white"
+                    : "bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 shadow-sm cursor-pointer"
                 }`}
               >
                 {copiedAll ? (
@@ -207,7 +317,10 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
             {loading ? (
               <div className="p-12 space-y-4">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="flex gap-4 items-center animate-pulse">
+                  <div
+                    key={i}
+                    className="flex gap-4 items-center animate-pulse"
+                  >
                     <div className="w-8 h-8 rounded bg-slate-100" />
                     <div className="flex-1 space-y-2">
                       <div className="h-4 bg-slate-100 rounded w-1/4" />
@@ -250,8 +363,8 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
                         onClick={() => handleCopyCity(city.name, idx)}
                         className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer border transition-all duration-300 ${
                           copiedCityIndex === idx
-                            ? 'bg-emerald-500 text-white border-emerald-500'
-                            : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:text-slate-800 hover:border-slate-300'
+                            ? "bg-emerald-500 text-white border-emerald-500"
+                            : "bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:text-slate-800 hover:border-slate-300"
                         }`}
                       >
                         {copiedCityIndex === idx ? (
@@ -272,8 +385,12 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
               </div>
             ) : (
               <div className="p-8 text-center text-slate-405 flex flex-col items-center justify-center">
-                <p className="text-sm font-semibold">Nenhuma cidade localizada.</p>
-                <p className="text-xs text-slate-400 mt-1">Tente ajustar a barra de busca acima.</p>
+                <p className="text-sm font-semibold">
+                  Nenhuma cidade localizada.
+                </p>
+                <p className="text-xs text-slate-400 mt-1">
+                  Tente ajustar a barra de busca acima.
+                </p>
               </div>
             )}
           </div>
@@ -281,7 +398,9 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
       ) : (
         <div className="p-12 text-center animate-pulse flex flex-col items-center justify-center">
           <RefreshCw className="w-8 h-8 text-emerald-500 animate-spin mb-3" />
-          <p className="text-sm font-medium text-slate-650">Carregando lista de leads...</p>
+          <p className="text-sm font-medium text-slate-650">
+            Carregando lista de leads...
+          </p>
         </div>
       )}
     </div>
