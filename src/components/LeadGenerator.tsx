@@ -118,35 +118,32 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
 
   const fetchLeads = async () => {
     setLoading(true);
-  
+
     try {
       const response = await fetch(
-        'https://api.dulivi.com.br/api/generate-leads',
+        "https://api.dulivi.com.br/api/generate-leads",
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-        }
+        },
       );
-  
+
       const result = await response.json();
-  
-      console.log('API RESULT:', result);
-  
+
+      console.log("API RESULT:", result);
+
       if (!response.ok || !result.success) {
-        throw new Error(result.error || 'Erro na API');
+        throw new Error(result.error || "Erro na API");
       }
-  
+
       setLeadData(result.data);
     } catch (error) {
       console.error(error);
-  
-      onShowToast(
-        'Erro ao carregar leads. Usando fallback.',
-        'info'
-      );
-  
+
+      onShowToast("Erro ao carregar leads. Usando fallback.", "info");
+
       setLeadData(fallbackLeads);
     } finally {
       setLoading(false);
@@ -164,7 +161,7 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
       setCopiedCityIndex(index);
       onShowToast(
         `Cidade "${cityName}" copiada para a área de transferência!`,
-        "success"
+        "success",
       );
       setTimeout(() => setCopiedCityIndex(null), 1500);
     } catch (err) {
@@ -181,7 +178,7 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
       setCopiedAll(true);
       onShowToast(
         `Lista completa com as 20 cidades do estado copiada!`,
-        "success"
+        "success",
       );
       setTimeout(() => setCopiedAll(false), 2000);
     } catch (err) {
@@ -194,7 +191,7 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
   const filteredCities = safeCities.filter(
     (city) =>
       city.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      city.metric?.toLowerCase().includes(searchTerm.toLowerCase())
+      city.metric?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -209,10 +206,6 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
               Gerador de Leads por Cidade
             </h2>
           </div>
-          <p className="text-slate-500 text-xs md:text-sm mt-1">
-            Escolhe automaticamente estados promissores do Brasil e mapeia 20
-            grandes polos de lanches para prospecção da Dulivi.
-          </p>
         </div>
 
         <button
@@ -242,57 +235,10 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
                 </h3>
               </div>
             </div>
-
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-indigo-100/30 rounded-xl p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-white shadow-sm flex items-center justify-center text-blue-600 border border-blue-100">
-                <Users className="w-5 h-5" />
-              </div>
-              <div>
-                <span className="text-[10px] text-blue-600 font-bold uppercase tracking-wide">
-                  Público Filtrado
-                </span>
-                <h3 className="text-sm font-semibold text-slate-800">
-                  Alta População e Delivery Exponencial
-                </h3>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex items-center justify-between gap-4">
-              <div className="space-y-1">
-                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wide">
-                  Mapeamento Geográfico
-                </span>
-                <div className="text-xs text-slate-600 font-medium font-mono">
-                  {leadData?.cities.length} Cidades Listadas
-                </div>
-              </div>
-
-              <button
-                id="btn-copy-allcities"
-                onClick={handleCopyAll}
-                className={`py-2 px-3 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all duration-300 ${
-                  copiedAll
-                    ? "bg-emerald-600 text-white"
-                    : "bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 shadow-sm cursor-pointer"
-                }`}
-              >
-                {copiedAll ? (
-                  <>
-                    <Check className="w-3.5 h-3.5" />
-                    <span>Todas copiadas!</span>
-                  </>
-                ) : (
-                  <>
-                    <ClipboardCopy className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Copiar Lista (Bulk)</span>
-                  </>
-                )}
-              </button>
-            </div>
           </div>
 
           {/* Search bar inside prospecting panel */}
-          <div className="relative">
+          {/* <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
               <Search className="w-4 h-4" />
             </div>
@@ -303,7 +249,7 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-white border border-slate-200/90 rounded-xl focus:outline-none focus:border-emerald-500 text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:ring-1 focus:ring-emerald-500"
             />
-          </div>
+          </div> */}
 
           {/* List grid of cities */}
           <div className="border border-slate-100 rounded-xl overflow-hidden bg-white shadow-sm">
@@ -334,7 +280,8 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
                 {filteredCities.map((city, idx) => (
                   <div
                     key={idx}
-                    className="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 items-center px-5 py-4 hover:bg-slate-50/50 transition-colors"
+                    onClick={() => handleCopyCity(city.name, idx)}
+                    className="cursor-pointer grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 items-center px-5 py-4 hover:bg-slate-50/50 transition-colors"
                   >
                     {/* UF badge */}
                     <div className="col-span-1 flex items-center justify-start">
