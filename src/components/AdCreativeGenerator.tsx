@@ -129,23 +129,11 @@ export default function AdCreativeGenerator({
       ctx.strokeStyle = `${creative.accentColor}33`; // 20% opacity matching accent
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.arc(100, 100, 150, 0, Math.PI * 2);
       ctx.stroke();
       ctx.beginPath();
-      ctx.arc(980, 980, 200, 0, Math.PI * 2);
       ctx.stroke();
 
-      // 4. Draw ad layout based on adLayoutType
-      if (adLayoutType === 0) {
-        // Layout 0: Centered glass card layout (Modern SaaS)
-        drawCenteredGlassAd(ctx, creative);
-      } else if (adLayoutType === 1) {
-        // Layout 1: Bold asymmetrical left side list (Facebook Banner style)
-        drawAsymmetricAd(ctx, creative);
-      } else {
-        // Layout 2: Modern dark brutalist card grid list
-        drawSplitFeatureAd(ctx, creative);
-      }
+      drawMinimalAd(ctx, creative);
 
       setLoading(false);
     };
@@ -168,264 +156,44 @@ export default function AdCreativeGenerator({
     }
   }, [creative, bgImageUrl, adLayoutType]);
 
-  // Layout 0: Modern centered card overlay layout
-  const drawCenteredGlassAd = (
-    ctx: CanvasRenderingContext2D,
-    data: CreativeData,
-  ) => {
-    // Elegant border frame
-    ctx.strokeStyle = `${data.accentColor}dd`;
-    ctx.lineWidth = 8;
-    ctx.strokeRect(30, 30, 1020, 1020);
+  const drawMinimalAd = (ctx: CanvasRenderingContext2D, data: CreativeData) => {
+    // overlay forte
+    ctx.fillStyle = "rgba(0,0,0,.65)";
+    ctx.fillRect(0, 0, 1080, 1080);
 
-    // Main dark container glassmorphism simulation
-    ctx.fillStyle = "rgba(15, 23, 42, 0.75)";
-    // draw round rect
-    drawRoundRect(ctx, 80, 100, 920, 880, 24);
-    ctx.fill();
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // Top logo label
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = 'bold 36px "Space Grotesk", sans-serif';
     ctx.textAlign = "center";
-    ctx.fillText("DULIVI", 540, 175);
 
+    // badge pequeno
     ctx.fillStyle = data.accentColor;
-    ctx.font = '500 22px "Space Grotesk", sans-serif';
-    ctx.fillText("◇ SISTEMA PARCELADO DE ENTREGAS ◇", 540, 215);
-
-    // Badge: "Teste Grátis 15 Dias"
-    ctx.fillStyle = data.accentColor;
-    drawRoundRect(ctx, 350, 240, 380, 64, 32);
+    drawRoundRect(ctx, 360, 70, 360, 60, 30);
     ctx.fill();
 
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = 'bold 30px "Space Grotesk", sans-serif';
-    ctx.fillText(data.badge.toUpperCase(), 540, 282);
+    ctx.fillStyle = "#fff";
+    ctx.font = '700 30px "Space Grotesk"';
+    ctx.fillText(data.badge.toUpperCase(), 540, 110);
 
-    // Slogan / title
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = '800 54px "Plus Jakarta Sans", sans-serif';
-    wrapText(ctx, data.title.toUpperCase(), 540, 375, 820, 68, true);
+    // titulo gigante
+    const title = data.title.toUpperCase();
 
-    // Bullet Benefits Header
-    ctx.fillStyle = "rgba(255,255,255,0.5)";
-    ctx.font = '500 18px "Space Grotesk", sans-serif';
-    ctx.fillText("PLANILHA DE VANTAGENS DO PACOTE", 540, 520);
+    ctx.fillStyle = "#fff";
+    ctx.font = '900 120px "Space Grotesk"';
 
-    // Benefits list setup
-    const benefits = [
-      "Cardápio Digital completo e interativo",
-      "Robô automático no WhatsApp para pedidos",
-      "Recebimento direto de clientes sem taxas",
-      "Divulgação programada de anúncios online",
-    ];
+    wrapText(ctx, title, 540, 450, 900, 130, true);
 
-    ctx.textAlign = "left";
-    ctx.font = '600 28px "Plus Jakarta Sans", sans-serif';
+    // hook bem menor
+    ctx.fillStyle = "#CBD5E1";
+    ctx.font = '500 54px "Space Grotesk"';
 
-    benefits.forEach((benefit, index) => {
-      const yPos = 585 + index * 70;
+    wrapText(ctx, data.hook, 540, 850, 880, 50, true);
 
-      // Draw Checkbox Background
-      ctx.fillStyle = data.accentColor;
-      drawRoundRect(ctx, 160, yPos - 26, 36, 36, 8);
-      ctx.fill();
-
-      // Checkmark tick
-      ctx.fillStyle = "#FFFFFF";
-      ctx.font = "bold 22px sans-serif";
-      ctx.fillText("✓", 168, yPos + 1);
-
-      // Benefit Text
-      ctx.fillStyle = "#E2E8F0";
-      ctx.font = '600 26px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(benefit, 216, yPos + 2);
-    });
-
-    // Footer brand/domain
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#94A3B8";
-    ctx.font = '500 22px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText("Acesse o painel oficial para saber mais", 540, 895);
-
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = 'bold 38px "Space Grotesk", sans-serif';
-    ctx.fillText("DULIVI.COM.BR", 540, 945);
-  };
-
-  // Layout 1: Left-aligned list (Facebook Ad inspired)
-  const drawAsymmetricAd = (
-    ctx: CanvasRenderingContext2D,
-    data: CreativeData,
-  ) => {
-    // Side frame border highlight
-    ctx.fillStyle = data.accentColor;
-    ctx.fillRect(0, 0, 40, 1080);
-
-    // Glass panel overlay covering the left side
-    ctx.fillStyle = "rgba(11, 16, 30, 0.85)";
-    drawRoundRect(ctx, 80, 80, 920, 920, 16);
-    ctx.fill();
-    ctx.strokeStyle = "rgba(255,255,255,0.08)";
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.textAlign = "left";
-    ctx.fillStyle = data.accentColor;
-    ctx.font = '800 32px "Space Grotesk", sans-serif';
-    ctx.fillText("DULIVI CARDÁPIO", 140, 160);
-
-    // Badge
-    ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
-    drawRoundRect(ctx, 140, 195, 280, 48, 8);
-    ctx.fill();
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = 'bold 20px "Space Grotesk", sans-serif';
-    ctx.fillText(`⚡ ${data.badge.toUpperCase()}`, 160, 226);
-
-    // title Headline
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = '800 62px "Plus Jakarta Sans", sans-serif';
-    wrapText(ctx, data.title.toUpperCase(), 140, 310, 800, 72, false);
-
-    // Separator line
-    ctx.strokeStyle = "rgba(255,255,255,0.15)";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(140, 480);
-    ctx.lineTo(820, 480);
-    ctx.stroke();
-
-    // Features Section
-    const benefits = [
-      "Cardápio Digital completo e profissional",
-      "Robô inteligente atendendo no WhatsApp 24h",
-      "Sistema de pedidos integrado sem intermédios",
-      "Seu negócio anunciado com anúncios prontos",
-    ];
-
-    ctx.font = '600 28px "Plus Jakarta Sans", sans-serif';
-    benefits.forEach((benefit, idx) => {
-      const y = 540 + idx * 75;
-
-      // Draw beautiful indicator
-      ctx.fillStyle = data.accentColor;
-      ctx.beginPath();
-      ctx.arc(160, y + 10, 14, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = "#FFFFFF";
-      ctx.font = "bold 18px sans-serif";
-      ctx.fillText("✓", 154, y + 16);
-
-      ctx.fillStyle = "#F1F5F9";
-      ctx.font = '600 26px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(benefit, 195, y + 19);
-    });
-
-    // Domain call text
-    ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.font = '500 22px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText("Acesse via navegador e ganhe bônus:", 140, 895);
-
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = '900 48px "Space Grotesk", sans-serif';
-    ctx.fillText("dulivi.com.br", 140, 955);
-  };
-
-  // Layout 2: Modern dark split feature layout
-  const drawSplitFeatureAd = (
-    ctx: CanvasRenderingContext2D,
-    data: CreativeData,
-  ) => {
-    // Soft elegant frame
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.lineWidth = 14;
-    ctx.strokeRect(7, 7, 1066, 1066);
-
-    // Two column split representation (Glass grids card)
-    ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
-    drawRoundRect(ctx, 60, 60, 960, 960, 20);
-    ctx.fill();
-
-    // Top Header
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#F8FAFC";
-    ctx.font = '800 44px "Space Grotesk", sans-serif';
-    ctx.fillText("SaaS Dulivi Delivery", 540, 140);
-
-    // Badge Overlay
-    ctx.fillStyle = data.accentColor;
-    drawRoundRect(ctx, 380, 175, 320, 50, 12);
-    ctx.fill();
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText(data.badge.toUpperCase(), 540, 208);
-
-    // Large main visual slogan text
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = 'bold 50px "Plus Jakarta Sans", sans-serif';
-    wrapText(ctx, data.title, 540, 290, 860, 64, true);
-
-    // Bullet Grid Cards (Grid of features)
-    const features = [
-      { t: "Cardápio Personalizado", d: "Seu layout, suas cores e logomarca." },
-      {
-        t: "Automação no WhatsApp",
-        d: "Instalação imediata responde sozinho.",
-      },
-      { t: "Consumo Zero Taxas", d: "Rende 100% de lucro em todas as vendas." },
-      { t: "Mídia Paga & Vendas", d: "Anúncios diretos integrados no SaaS." },
-    ];
-
-    const cardWidth = 410;
-    const cardHeight = 180;
-    const cardGap = 40;
-
-    features.forEach((f, idx) => {
-      const col = idx % 2;
-      const row = Math.floor(idx / 2);
-
-      const x = 110 + col * (cardWidth + cardGap);
-      const y = 460 + row * (cardHeight + cardGap);
-
-      // Card body
-      ctx.fillStyle = "rgba(255,255,255,0.04)";
-      drawRoundRect(ctx, x, y, cardWidth, cardHeight, 16);
-      ctx.fill();
-      ctx.strokeStyle = "rgba(255,255,255,0.06)";
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      // Colored Left Mark
-      ctx.fillStyle = data.accentColor;
-      ctx.fillRect(x, y + 30, 6, 45);
-
-      // Title
-      ctx.textAlign = "left";
-      ctx.fillStyle = "#FFFFFF";
-      ctx.font = 'bold 24px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(f.t, x + 24, y + 52);
-
-      // Desc
-      ctx.fillStyle = "#94A3B8";
-      ctx.font = '14px "Plus Jakarta Sans", sans-serif';
-      wrapText(ctx, f.d, x + 24, y + 84, cardWidth - 48, 22, false, 18);
-    });
-
-    // Clean brand call
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#64748B";
-    ctx.font = 'bold 18px "Space Grotesk", sans-serif';
-    ctx.fillText("GARANTA SEUS 15 DIAS GRÁTIS EM:", 540, 915);
+    // footer
+    ctx.fillStyle = "#CBD5E1";
+    ctx.font = '700 24px "Space Grotesk"';
+    ctx.fillText("GARANTA SEUS 15 DIAS GRÁTIS EM:", 540, 1000);
 
     ctx.fillStyle = data.accentColor;
-    ctx.font = '800 38px "Space Grotesk", sans-serif';
-    ctx.fillText("DULIVI.COM.BR", 540, 965);
+    ctx.font = '900 42px "Space Grotesk"';
+    ctx.fillText("DULIVI.COM.BR", 540, 1050);
   };
 
   // Helper function to draw rounded corners rect

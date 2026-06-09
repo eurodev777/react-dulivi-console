@@ -256,7 +256,7 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
             <div className="hidden sm:grid grid-cols-12 gap-4 px-5 py-3 bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
               <div className="col-span-1">UF</div>
               <div className="col-span-4">Cidade</div>
-              <div className="col-span-5">Indicativo Comercial / Niche</div>
+              <div className="col-span-5">Descrição</div>
               <div className="col-span-2 text-right">Ações</div>
             </div>
 
@@ -276,7 +276,7 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
                 ))}
               </div>
             ) : filteredCities.length > 0 ? (
-              <div className="divide-y divide-slate-100 max-h-[500px] overflow-y-auto">
+              <div className="divide-y divide-slate-100 max-h-[1300px] overflow-y-auto">
                 {filteredCities.map((city, idx) => (
                   <div
                     key={idx}
@@ -300,7 +300,7 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
                     {/* Metric info */}
                     <div className="col-span-5">
                       <p className="text-[11px] sm:text-xs text-slate-500 leading-normal">
-                        {city.metric}
+                        Clique para copiar o nome da cidade
                       </p>
                     </div>
 
