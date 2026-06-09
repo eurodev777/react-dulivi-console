@@ -20,8 +20,15 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
   const [loading, setLoading] = useState(false);
   const [leadData, setLeadData] = useState<LeadData | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [copiedCityIndex, setCopiedCityIndex] = useState<number | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
+  const [copiedCityName, setCopiedCityName] = useState<string | null>(null);
+
+  useEffect(() => {
+    const savedCity = localStorage.getItem("copiedCity");
+    if (savedCity) {
+      setCopiedCityName(savedCity);
+    }
+  }, []);
 
   // Standard initial fallback
   const fallbackLeads: LeadData = {
@@ -155,15 +162,17 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
   }, []);
 
   // Individual copy handler
-  const handleCopyCity = async (cityName: string, index: number) => {
+  const handleCopyCity = async (cityName: string) => {
     try {
       await navigator.clipboard.writeText(cityName);
-      setCopiedCityIndex(index);
+
+      setCopiedCityName(cityName);
+      localStorage.setItem("copiedCity", cityName);
+
       onShowToast(
         `Cidade "${cityName}" copiada para a área de transferência!`,
         "success",
       );
-      setTimeout(() => setCopiedCityIndex(null), 1500);
     } catch (err) {
       onShowToast("Erro ao copiar. Copie manualmente os dados.", "info");
     }
@@ -235,6 +244,17 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
                 </h3>
               </div>
             </div>
+            {/* COPIADO */}
+            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border border-emerald-100/30 rounded-xl p-4 flex items-center gap-4">
+              <div>
+                <span className="text-[10px] text-emerald-650 font-bold uppercase tracking-wide">
+                  Último copiado
+                </span>
+                <h3 className="text-base font-bold text-slate-800 leading-tight">
+                  {copiedCityName}
+                </h3>
+              </div>
+            </div>
           </div>
 
           {/* Search bar inside prospecting panel */}
@@ -280,7 +300,7 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
                 {filteredCities.map((city, idx) => (
                   <div
                     key={idx}
-                    onClick={() => handleCopyCity(city.name, idx)}
+                    onClick={() => handleCopyCity(city.name)}
                     className="cursor-pointer grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-4 items-center px-5 py-4 hover:bg-slate-50/50 transition-colors"
                   >
                     {/* UF badge */}
@@ -307,14 +327,14 @@ export default function LeadGenerator({ onShowToast }: LeadGeneratorProps) {
                     {/* Copy actions */}
                     <div className="col-span-2 text-left sm:text-right">
                       <button
-                        onClick={() => handleCopyCity(city.name, idx)}
+                        onClick={() => handleCopyCity(city.name)}
                         className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer border transition-all duration-300 ${
-                          copiedCityIndex === idx
+                          copiedCityName === city.name
                             ? "bg-emerald-500 text-white border-emerald-500"
                             : "bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:text-slate-800 hover:border-slate-300"
                         }`}
                       >
-                        {copiedCityIndex === idx ? (
+                        {copiedCityName === city.name ? (
                           <>
                             <Check className="w-3 h-3 animate-scale" />
                             <span>Copiada!</span>
