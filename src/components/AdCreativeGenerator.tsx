@@ -56,7 +56,8 @@ export default function AdCreativeGenerator({
 
       // Construct Pollinations URL with the Gemini generated prompt
       const seed = getRandomSeed();
-      const pollinationUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(data.bgImagePrompt)}?width=1085&height=1085&nologo=true&seed=${seed}&model=flux`;
+      const fallback = { ...fallbackCreative };
+      const pollinationUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fallback.bgImagePrompt)}?width=1085&height=1085&nologo=true&seed=${seed}&model=flux`;
       setBgImageUrl(pollinationUrl);
     } catch (error) {
       console.error(error);
