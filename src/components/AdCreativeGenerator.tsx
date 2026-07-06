@@ -22,56 +22,109 @@ export default function AdCreativeGenerator({
   const [adLayoutType, setAdLayoutType] = useState<number>(0); // alternate between different visual layouts for variety
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Fallback initial state
-  const fallbackCreative: CreativeData = {
-    title: "Cardápio Inteligente",
-    hook: "Diga adeus às taxas abusivas dos aplicativos!",
-    badge: "Teste Grátis 15 Dias",
-    accentColor: "#F97316",
-    bgGradientStart: "#0F172A",
-    bgGradientEnd: "#1E293B",
-    bgImagePrompt:
-      "delicious juicy burger floating burger modern digital menu vector neon, dark background, flat design, 3D clay aesthetic, minimal, no text",
-  };
+  const titles = [
+    "DELIVERY",
+    "SITE",
+    "CARDÁPIO",
+  ];
+  
+  const prices = [
+    {
+      value: "R$ 75,00",
+      annual: false,
+    },
+    {
+      value: "R$ 60,00",
+      annual: true,
+    },
+    {
+      value: "GRÁTIS",
+      annual: false
+    },
+  ];
+  
+  const extras = [
+    "+ Robô para WhatsApp",
+    "+ ANÚNCIOS ONLINE",
+    "+ Tráfego Pago",
+    "+ IA para Restaurantes",
+    "+ Atendente Virtual",
+    "+ Pagamento Online"
+  ];
+  
+  const backgrounds = [
+    "#FFFFFF", // branco
+    "#FAFAFA", // branco gelo
+    "#F8F8F8",
+    "#F5F5F5",
+    "#F2F2F2",
+    "#EEEEEE",
+    "#ECECEC",
+    "#E9E9E9",
+  
+    // beges
+    "#F9F6F1",
+    "#F7F3EC",
+    "#F5EFE6",
+    "#F3EEE8",
+    "#EFE7DD",
+  
+    // creme
+    "#FFFDF8",
+    "#FFF9F0",
+    "#FFF6E9",
+    "#FCF7EC",
+  
+    // azul bem claro
+    "#F4F8FF",
+    "#EEF5FF",
+    "#EAF2FF",
+  
+    // verde bem claro
+    "#F2FAF5",
+    "#EDF8F1",
+    "#EAF7EA",
+  
+    // rosa bem claro
+    "#FFF5F7",
+    "#FDF0F3",
+  
+    // amarelo claro
+    "#FFFBEA",
+    "#FFF8DC",
+    "#FCF8E8",
+  
+    // cinza azulado
+    "#F3F5F7",
+    "#EEF2F5",
+  
+    // lavanda clara
+    "#F7F5FF",
+    "#F3F0FF",
+  ];
 
-  // Generate a random seed
-  const getRandomSeed = () => Math.floor(Math.random() * 1000000);
-
-  // Primary function to request new creative from server
-  const generateNewCreative = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        "https://api.dulivi.com.br/api/generate-creative-prompts",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        },
-      );
-      const data: CreativeData = await response.json();
-      setCreative(data);
-
-      // Select random layout structure
-      setAdLayoutType(Math.floor(Math.random() * 3));
-
-      // Construct Pollinations URL with the Gemini generated prompt
-      const seed = getRandomSeed();
-      const fallback = { ...fallbackCreative };
-      const pollinationUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fallback.bgImagePrompt)}?width=1085&height=1085&nologo=true&seed=${seed}&model=flux`;
-      setBgImageUrl(pollinationUrl);
-    } catch (error) {
-      console.error(error);
-      onShowToast(
-        "Erro ao contatar o servidor. Usando tema de backup local.",
-        "info",
-      );
-
-      const fallback = { ...fallbackCreative };
-      setCreative(fallback);
-      setBgImageUrl(
-        `https://image.pollinations.ai/prompt/${encodeURIComponent(fallback.bgImagePrompt)}?width=1080&height=1080&nologo=true&seed=${getRandomSeed()}&model=flux`,
-      );
+  const generateNewCreative = () => {
+    const title = titles[Math.floor(Math.random() * titles.length)];
+  
+    // Se for SITE, usa dados fixos
+    if (title === "SITE") {
+      setCreative({
+        title,
+        price: { value: "R$ 90,00" },
+        extra: "Entregue em 7 dias",
+        background: backgrounds[Math.floor(Math.random() * backgrounds.length)],
+      });
+  
+      return;
     }
+  
+    // Demais serviços
+    setCreative({
+      title,
+      price: prices[Math.floor(Math.random() * prices.length)],
+      extra: extras[Math.floor(Math.random() * extras.length)],
+      background: backgrounds[Math.floor(Math.random() * backgrounds.length)],
+    });
   };
 
   // On mount, load first creative
@@ -96,10 +149,7 @@ export default function AdCreativeGenerator({
     // Preload elements
     const drawCanvas = (bgImg?: HTMLImageElement) => {
       // 1. Draw base gradient as background fallback
-      const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
-      grad.addColorStop(0, creative.bgGradientStart);
-      grad.addColorStop(1, creative.bgGradientEnd);
-      ctx.fillStyle = grad;
+      ctx.fillStyle = creative.background;
       ctx.fillRect(0, 0, 1080, 1080);
 
       // 2. Draw background image with cover style
@@ -157,103 +207,61 @@ export default function AdCreativeGenerator({
     }
   }, [creative, bgImageUrl, adLayoutType]);
 
-  const drawMinimalAd = (ctx: CanvasRenderingContext2D, data: CreativeData) => {
-    // overlay forte
-    ctx.fillStyle = "rgba(0,0,0,.65)";
+  const drawMinimalAd = (ctx, data) => {
+    ctx.fillStyle = data.background;
     ctx.fillRect(0, 0, 1080, 1080);
-
+  
     ctx.textAlign = "center";
+  
+    ctx.fillStyle = "#000";
 
-    // badge pequeno
-    ctx.fillStyle = data.accentColor;
-    drawRoundRect(ctx, 360, 70, 360, 60, 30);
-    ctx.fill();
-
-    ctx.fillStyle = "#fff";
-    ctx.font = '700 30px "Space Grotesk"';
-    ctx.fillText(data.badge.toUpperCase(), 540, 110);
-
-    // titulo gigante
-    const title = data.title.toUpperCase();
-
-    ctx.fillStyle = "#fff";
-    ctx.font = '900 120px "Space Grotesk"';
-
-    wrapText(ctx, title, 540, 450, 900, 130, true);
-
-    // hook bem menor
-    ctx.fillStyle = "#CBD5E1";
-    ctx.font = '500 54px "Space Grotesk"';
-
-    wrapText(ctx, data.hook, 540, 850, 880, 50, true);
-
-    // footer
-    ctx.fillStyle = "#CBD5E1";
-    ctx.font = '700 24px "Space Grotesk"';
-    ctx.fillText("GARANTA SEUS 15 DIAS GRÁTIS EM:", 540, 1000);
-
-    ctx.fillStyle = data.accentColor;
-    ctx.font = '900 42px "Space Grotesk"';
-    ctx.fillText("DULIVI.COM.BR", 540, 1050);
-  };
-
-  // Helper function to draw rounded corners rect
-  const drawRoundRect = (
-    ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    radius: number,
-  ) => {
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.lineTo(x + width - radius, y);
-    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-    ctx.lineTo(x + width, y + height - radius);
-    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-    ctx.lineTo(x + radius, y + height);
-    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-    ctx.lineTo(x, y + radius);
-    ctx.quadraticCurveTo(x, y, x + radius, y);
-    ctx.closePath();
-  };
-
-  // Helper for text wrapping in Canvas
-  const wrapText = (
-    ctx: CanvasRenderingContext2D,
-    text: string,
-    x: number,
-    y: number,
-    maxWidth: number,
-    lineHeight: number,
-    isCentered: boolean = false,
-    fontSizeOverride?: number,
-  ) => {
-    const words = text.split(" ");
-    let line = "";
-    let currentY = y;
-    const originFont = ctx.font;
-
-    if (fontSizeOverride) {
-      ctx.font = `600 ${fontSizeOverride}px "Plus Jakarta Sans", sans-serif`;
+    if (data.title === "SITE") {
+      // Seu SITE na mesma linha
+      ctx.font = '900 150px "Open Sans"';
+      ctx.fillText("Seu SITE", 540, 230);
+    } else {
+      // Seu em cima e o restante embaixo
+      ctx.font = '900 120px "Open Sans"';
+      ctx.fillText("Seu", 540, 155);
+    
+      ctx.font = '900 170px "Open Sans"';
+      ctx.fillText(data.title, 540, 320);
     }
-
-    for (let n = 0; n < words.length; n++) {
-      const testLine = line + words[n] + " ";
-      const metrics = ctx.measureText(testLine);
-      const testWidth = metrics.width;
-
-      if (testWidth > maxWidth && n > 0) {
-        ctx.fillText(line, isCentered ? x : x, currentY);
-        line = words[n] + " ";
-        currentY += lineHeight;
-      } else {
-        line = testLine;
-      }
+  
+    // Por apenas
+    ctx.fillStyle = "#000";
+    ctx.font = '720 105px "Open Sans"';
+    ctx.fillText(
+      data.price.value === "GRÁTIS" ? "crie" : "por apenas",
+      540,
+      470
+    );
+  
+    // Preço
+    ctx.fillStyle = "#ff0000";
+    ctx.font = '900 180px "Open Sans"';
+    ctx.fillText(data.price.value, 540, 650);
+  
+    // extra
+    if (data.price.value !== "GRÁTIS") {
+      ctx.fillStyle = "#2E7DFF";
+      ctx.font = '700 70px "Open Sans"';
+    
+      ctx.fillText(
+        data.price.annual ? "mensais no plano anual" : "mensais",
+        data.price.annual ? 540 : 820,
+        720
+      );
     }
-    ctx.fillText(line, isCentered ? x : x, currentY);
-    ctx.font = originFont; // restore
+  
+    // // Plano anual
+    // ctx.fillStyle = "#000";
+    // ctx.font = '600 42px "Open Sans"';
+    // ctx.fillText(`ou ${data.price.annual}`, 540, 790);
+  
+    // Extra
+    ctx.font = '900 90px "Open Sans"';
+    ctx.fillText(data.extra, 540, 930);
   };
 
   // Download high quality ad png trigger
@@ -309,7 +317,7 @@ export default function AdCreativeGenerator({
           <div className="space-y-4">
             <div className="p-4 bg-orange-50 bg-opacity-40 border border-orange-100 rounded-xl space-y-3">
               <span className="text-[10px] font-bold text-orange-700 tracking-wider uppercase font-mono">
-                Informações da Peça IA
+                Informações da Peça
               </span>
               {creative ? (
                 <div className="space-y-2">
@@ -317,14 +325,11 @@ export default function AdCreativeGenerator({
                     {creative.title}
                   </div>
                   <p className="text-xs text-slate-600 leading-relaxed italic">
-                    "{creative.hook}"
+                    "{creative.extra}"
                   </p>
                   <div className="flex flex-wrap gap-2 pt-1">
                     <span className="text-[10px] bg-white px-2 py-1 rounded-md border border-slate-200/80 text-slate-600 font-medium">
-                      Accent: {creative.accentColor}
-                    </span>
-                    <span className="text-[10px] bg-white px-2 py-1 rounded-md border border-slate-200/80 text-slate-600 font-medium">
-                      Layout: Estilo #{adLayoutType + 1}
+                      Accent: {creative.background}
                     </span>
                   </div>
                 </div>
