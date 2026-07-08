@@ -27,7 +27,7 @@ export default function AdCreativeGenerator({
     "SITE",
     "CARDÁPIO",
   ];
-  
+
   const prices = [
     {
       value: "R$ 75,00",
@@ -42,7 +42,7 @@ export default function AdCreativeGenerator({
       annual: false
     },
   ];
-  
+
   const extras = [
     "+ Robô para WhatsApp",
     "+ ANÚNCIOS ONLINE",
@@ -51,61 +51,62 @@ export default function AdCreativeGenerator({
     "+ Atendente Virtual",
     "+ Pagamento Online"
   ];
-  
+
   const backgrounds = [
-    "#FFFFFF", // branco
-    "#FAFAFA", // branco gelo
-    "#F8F8F8",
-    "#F5F5F5",
-    "#F2F2F2",
-    "#EEEEEE",
-    "#ECECEC",
-    "#E9E9E9",
-  
-    // beges
-    "#F9F6F1",
-    "#F7F3EC",
-    "#F5EFE6",
-    "#F3EEE8",
-    "#EFE7DD",
-  
-    // creme
-    "#FFFDF8",
-    "#FFF9F0",
-    "#FFF6E9",
-    "#FCF7EC",
-  
-    // azul bem claro
-    "#F4F8FF",
-    "#EEF5FF",
-    "#EAF2FF",
-  
-    // verde bem claro
-    "#F2FAF5",
-    "#EDF8F1",
-    "#EAF7EA",
-  
-    // rosa bem claro
-    "#FFF5F7",
-    "#FDF0F3",
-  
-    // amarelo claro
-    "#FFFBEA",
-    "#FFF8DC",
-    "#FCF8E8",
-  
-    // cinza azulado
-    "#F3F5F7",
-    "#EEF2F5",
-  
-    // lavanda clara
-    "#F7F5FF",
-    "#F3F0FF",
+    // 1. Pastéis Distintos (Suaves)
+    "#FFB3BA", // Rosa pastel
+    "#FFDFBA", // Pêssego/Laranja pastel
+    "#FFFFBA", // Amarelo pastel
+    "#BAFFC9", // Verde menta pastel
+    "#BAE1FF", // Azul bebê
+    "#E2CBF7", // Lilás suave
+    "#FFC4E1", // Chiclete claro
+    "#C4FAF8", // Ciano bem claro
+
+    // 2. Tons Terrosos e Boho (Modernos)
+    "#264653", // Azul petróleo escuro
+    "#2A9D8F", // Verde esmeralda suave
+    "#E9C46A", // Amarelo mostarda
+    "#F4A261", // Laranja areia
+    "#E76F51", // Terracota / Coral escuro
+    "#A3B18A", // Verde militar claro
+    "#DDA15E", // Caramelo
+    "#BC6C25", // Marrom madeira
+
+    // 3. Vibrantes e Vivas (Material Design)
+    "#F44336", // Vermelho forte
+    "#9C27B0", // Roxo vivo
+    "#2196F3", // Azul vibrante
+    "#00BCD4", // Ciano (Turquesa)
+    "#4CAF50", // Verde bandeira
+    "#FFEB3B", // Amarelo vivo
+    "#FF9800", // Laranja vivo
+    "#E91E63", // Pink
+
+    // 4. Mix de Frios e Quentes (Saturação média)
+    "#8ECAE6", // Azul céu
+    "#219EBC", // Azul cerúleo
+    "#023047", // Azul noite (muito escuro)
+    "#FFB703", // Amarelo gema
+    "#FB8500", // Laranja tangerina
+    "#8338EC", // Roxo elétrico
+    "#FF006E", // Rosa neon
+    "#3A86FF", // Azul royal
+
+    // 5. Cores Escuras (Estilo Dark Mode)
+    "#1A1A2E", // Azul marinho profundo
+    "#16213E", // Azul noturno
+    "#0F3460", // Azul intermediário escuro
+    "#E94560", // Rosa avermelhado escuro
+    "#2C3E50", // Cinza azulado
+    "#27AE60", // Verde musgo escuro
+    "#8E44AD", // Roxo escuro
+    "#D35400", // Abóbora escuro
   ];
 
   const generateNewCreative = () => {
     const title = titles[Math.floor(Math.random() * titles.length)];
-  
+
     // Se for SITE, usa dados fixos
     if (title === "SITE") {
       setCreative({
@@ -114,10 +115,10 @@ export default function AdCreativeGenerator({
         extra: "Entregue em 7 dias",
         background: backgrounds[Math.floor(Math.random() * backgrounds.length)],
       });
-  
+
       return;
     }
-  
+
     // Demais serviços
     setCreative({
       title,
@@ -210,58 +211,83 @@ export default function AdCreativeGenerator({
   const drawMinimalAd = (ctx, data) => {
     ctx.fillStyle = data.background;
     ctx.fillRect(0, 0, 1080, 1080);
-  
+
     ctx.textAlign = "center";
-  
-    ctx.fillStyle = "#000";
+
+    // --- CONFIGURAÇÃO DA SOMBRA E BORDA PADRÃO ---
+    // Uma leve sombra escura para dar profundidade
+    ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetX = 3;
+    ctx.shadowOffsetY = 3;
+
+    // Configuração da borda (Stroke) - Branca para proteger a letra de fundos escuros/iguais
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 20; // Grossura da borda (pode ajustar se achar muito grossa)
+    ctx.lineJoin = "round"; // Deixa os cantos da borda arredondados
+
+    // Função auxiliar para desenhar o texto com a borda
+    // Ela desenha a borda primeiro e pinta a cor principal por cima
+    const drawTextWithOutline = (text, x, y) => {
+      ctx.strokeText(text, x, y); // Desenha a borda branca (com sombra)
+
+      // Desliga a sombra rapidamente apenas para o miolo da letra não ficar borrado
+      ctx.shadowColor = "transparent";
+      ctx.fillText(text, x, y); // Pinta a cor principal por dentro
+
+      // Religa a sombra para o próximo texto
+      ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+    };
+
+    ctx.fillStyle = "#fff";
 
     if (data.title === "SITE") {
       // Seu SITE na mesma linha
-      ctx.font = '900 150px "Open Sans"';
-      ctx.fillText("Seu SITE", 540, 230);
+      ctx.font = '900 150px "Roboto"';
+      drawTextWithOutline("Seu SITE", 540, 230);
     } else {
       // Seu em cima e o restante embaixo
-      ctx.font = '900 120px "Open Sans"';
-      ctx.fillText("Seu", 540, 155);
-    
-      ctx.font = '900 170px "Open Sans"';
-      ctx.fillText(data.title, 540, 320);
+      ctx.font = '900 120px "Roboto"';
+      drawTextWithOutline("Seu", 540, 150);
+
+      ctx.font = '900 170px "Roboto"';
+      drawTextWithOutline(data.title, 540, 320);
     }
-  
+
     // Por apenas
-    ctx.fillStyle = "#000";
-    ctx.font = '720 105px "Open Sans"';
-    ctx.fillText(
+    ctx.fillStyle = "#fff";
+    ctx.font = '720 105px "Roboto"';
+    drawTextWithOutline(
       data.price.value === "GRÁTIS" ? "crie" : "por apenas",
       540,
-      470
+      450
     );
-  
-    // Preço
-    ctx.fillStyle = "#ff0000";
-    ctx.font = '900 180px "Open Sans"';
-    ctx.fillText(data.price.value, 540, 650);
-  
+
+    // Preço - Usando vermelho vibrante
+    ctx.fillStyle = "#FF003C"; // Troquei para aquele vermelho neon que te passei antes, destaca mais!
+    ctx.font = '900 180px "Roboto"';
+    drawTextWithOutline(data.price.value, 540, 650);
+
     // extra
     if (data.price.value !== "GRÁTIS") {
-      ctx.fillStyle = "#2E7DFF";
-      ctx.font = '700 70px "Open Sans"';
-    
-      ctx.fillText(
+      ctx.fillStyle = "#007AFF"; // Azul
+      ctx.font = '700 70px "Roboto"';
+
+      drawTextWithOutline(
         data.price.annual ? "mensais no plano anual" : "mensais",
         data.price.annual ? 540 : 820,
-        720
+        730
       );
     }
-  
-    // // Plano anual
-    // ctx.fillStyle = "#000";
-    // ctx.font = '600 42px "Open Sans"';
-    // ctx.fillText(`ou ${data.price.annual}`, 540, 790);
-  
-    // Extra
-    ctx.font = '900 90px "Open Sans"';
-    ctx.fillText(data.extra, 540, 930);
+
+    // Extra final
+    ctx.fillStyle = "#fff"; // Esqueci de resetar a cor, então coloquei preto aqui para garantir
+    ctx.font = '900 90px "Roboto"';
+    drawTextWithOutline(data.extra, 540, 930);
+
+    // Limpa as configurações de sombra e linha no final para não afetar outros desenhos do canvas
+    ctx.shadowColor = "transparent";
+    ctx.lineWidth = 1;
   };
 
   // Download high quality ad png trigger
