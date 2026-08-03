@@ -26,6 +26,8 @@ export default function AdCreativeGenerator({
     "DELIVERY",
     "SITE",
     "CARDÁPIO",
+    "ANÚNCIOS ON-LINE",
+    "TRÁFEGO PAGO"
   ];
 
   const prices = [
@@ -40,7 +42,7 @@ export default function AdCreativeGenerator({
     {
       value: "GRÁTIS",
       annual: false
-    },
+    }
   ];
 
   const extras = [
@@ -113,6 +115,26 @@ export default function AdCreativeGenerator({
         title,
         price: { value: "R$ 90,00" },
         extra: "Entregue em 7 dias",
+        background: backgrounds[Math.floor(Math.random() * backgrounds.length)],
+      });
+
+      return;
+    }
+    if (title === "ANÚNCIOS ON-LINE") {
+      setCreative({
+        title,
+        price: { value: "R$ 97,00" },
+        extra: "Plano de 15 dias",
+        background: backgrounds[Math.floor(Math.random() * backgrounds.length)],
+      });
+
+      return;
+    }
+    if (title === "TRÁFEGO PAGO") {
+      setCreative({
+        title,
+        price: { value: "R$ 97,00" },
+        extra: "Plano de 15 dias",
         background: backgrounds[Math.floor(Math.random() * backgrounds.length)],
       });
 
