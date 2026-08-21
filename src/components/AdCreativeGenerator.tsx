@@ -24,7 +24,6 @@ export default function AdCreativeGenerator({
     "DELIVERY",
     "CARDÁPIO DIGITAL",
     "ANÚNCIOS ON-LINE",
-    "TRÁFEGO PAGO",
     "ANÚNCIOS POR R$300 MENSAL",
   ];
 
@@ -46,7 +45,6 @@ export default function AdCreativeGenerator({
   const extras = [
     "+ Robô para WhatsApp",
     "+ ANÚNCIOS ONLINE",
-    "+ Tráfego Pago",
     "+ IA para Restaurantes",
     "+ Atendente Virtual",
     "+ Pagamento Online",
@@ -141,8 +139,8 @@ export default function AdCreativeGenerator({
       return;
     }
 
-    // Mantém os planos que já existiam
-    if (title === "ANÚNCIOS ON-LINE" || title === "TRÁFEGO PAGO") {
+    // Mantém o plano de ANÚNCIOS ON-LINE que já existia
+    if (title === "ANÚNCIOS ON-LINE") {
       setCreative({
         title,
         price: {
@@ -513,7 +511,7 @@ export default function AdCreativeGenerator({
             </div>
           )}
 
-          {/* Hidden but responsive real canvas container a */}
+          {/* Hidden but responsive real canvas container */}
           <div className="w-full max-w-[420px] aspect-square relative rounded-2xl overflow-hidden shadow-xl border border-slate-200/80 bg-slate-100 flex items-center justify-center">
             <canvas
               ref={canvasRef}
