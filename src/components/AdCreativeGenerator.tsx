@@ -20,10 +20,7 @@ export default function AdCreativeGenerator({
   const [adLayoutType, setAdLayoutType] = useState<number>(0); // alternate between different visual layouts for variety
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const titles = [
-    "CARDÁPIO DIGITAL",
-    "ANÚNCIOS POR R$300 MENSAL",
-  ];
+  const titles = ["CARDÁPIO DIGITAL", "ANÚNCIOS POR R$300 MENSAL"];
 
   const prices = [
     {
@@ -52,52 +49,33 @@ export default function AdCreativeGenerator({
     "TRAFEGO PAGO - 8 POSTS POR MES - SITE COMPLETO HOSPEDAGEM INCLUSA";
 
   // Paleta bem maior para cada criativo sair com uma identidade diferente
-  const backgrounds = [
-    // Pastéis
-    "#FFB3BA", "#FFDFBA", "#FFFFBA", "#BAFFC9", "#BAE1FF",
-    "#E2CBF7", "#FFC4E1", "#C4FAF8", "#FFD6E0", "#D7F9F1",
-    "#FDE2E4", "#E2ECE9", "#BEE1E6", "#F0EFEB", "#DFE7FD",
+  const backgrounds = (() => {
+    const colors = [];
 
-    // Vermelhos, rosas e magentas
-    "#E63946", "#D90429", "#EF233C", "#FF0054", "#FF006E",
-    "#E91E63", "#C9184A", "#A4133C", "#B5179E", "#F72585",
-    "#9D4EDD", "#C77DFF", "#FF4D6D", "#FF758F", "#FF8FA3",
+    const hues = [
+      0, 180, 60, 240, 30, 210, 120, 300, 15, 195, 90, 270, 45, 225, 150, 330,
+      10, 170, 75, 255, 35, 200, 110, 290, 350, 160, 50, 230, 100, 280, 20, 190,
+    ];
 
-    // Laranjas, amarelos e dourados
-    "#FB8500", "#FF7B00", "#FF8800", "#FF9505", "#F48C06",
-    "#F77F00", "#FFB703", "#FFC300", "#FFD60A", "#FFEA00",
-    "#E9C46A", "#F4A261", "#DDA15E", "#E85D04", "#DC2F02",
+    const levels = [
+      { s: 90, l: 50 },
+      { s: 75, l: 68 },
+      { s: 85, l: 35 },
+      { s: 60, l: 52 },
+      { s: 95, l: 62 },
+      { s: 70, l: 40 },
+      { s: 55, l: 72 },
+      { s: 100, l: 45 },
+    ];
 
-    // Verdes
-    "#06D6A0", "#00B894", "#2A9D8F", "#40916C", "#52B788",
-    "#74C69D", "#95D5B2", "#2D6A4F", "#1B4332", "#4CAF50",
-    "#43AA8B", "#90BE6D", "#A7C957", "#588157", "#3A5A40",
+    for (const level of levels) {
+      for (const hue of hues) {
+        colors.push(`hsl(${hue}, ${level.s}%, ${level.l}%)`);
+      }
+    }
 
-    // Azuis e cianos
-    "#00B4D8", "#0096C7", "#0077B6", "#023E8A", "#03045E",
-    "#2196F3", "#3A86FF", "#4361EE", "#4895EF", "#4CC9F0",
-    "#118AB2", "#277DA1", "#577590", "#8ECAE6", "#219EBC",
-
-    // Roxos
-    "#7209B7", "#560BAD", "#480CA8", "#3A0CA3", "#8338EC",
-    "#7B2CBF", "#5A189A", "#4A148C", "#6A4C93", "#8E44AD",
-    "#9C27B0", "#6C63FF", "#5E60CE", "#6930C3", "#7400B8",
-
-    // Escuros
-    "#0B132B", "#1C2541", "#1A1A2E", "#16213E", "#0F3460",
-    "#111827", "#1F2937", "#0F172A", "#18181B", "#27272A",
-    "#2C3E50", "#263238", "#212121", "#001219", "#14213D",
-
-    // Terrosos e sofisticados
-    "#264653", "#E76F51", "#BC6C25", "#9C6644", "#7F5539",
-    "#B08968", "#6F4E37", "#8D6E63", "#A98467", "#6B705C",
-    "#A5A58D", "#CB997E", "#D4A373", "#B56576", "#355070",
-
-    // Neon / alto impacto
-    "#FF003C", "#00F5D4", "#00BBF9", "#F15BB5", "#FEE440",
-    "#9B5DE5", "#00F0FF", "#39FF14", "#FF3131", "#FF10F0",
-    "#7DF9FF", "#CCFF00", "#FF5F1F", "#FE019A", "#7CFF01",
-  ];
+    return colors;
+  })();
 
   const lastBackgroundRef = useRef<string>("");
 
@@ -225,10 +203,7 @@ export default function AdCreativeGenerator({
     }
   }, [creative, bgImageUrl, adLayoutType]);
 
-  const drawMinimalAd = (
-    ctx: CanvasRenderingContext2D,
-    data: CreativeData,
-  ) => {
+  const drawMinimalAd = (ctx: CanvasRenderingContext2D, data: CreativeData) => {
     ctx.fillStyle = data.background;
     ctx.fillRect(0, 0, 1080, 1080);
 
@@ -244,11 +219,7 @@ export default function AdCreativeGenerator({
     ctx.lineWidth = 18;
     ctx.lineJoin = "round";
 
-    const drawTextWithOutline = (
-      text: string,
-      x: number,
-      y: number,
-    ) => {
+    const drawTextWithOutline = (text: string, x: number, y: number) => {
       ctx.strokeText(text, x, y);
       ctx.shadowColor = "transparent";
       ctx.fillText(text, x, y);
@@ -321,13 +292,7 @@ export default function AdCreativeGenerator({
       let currentY = 690;
 
       descriptionParts.forEach((part) => {
-        const lineCount = drawWrappedText(
-          part,
-          540,
-          currentY,
-          860,
-          72,
-        );
+        const lineCount = drawWrappedText(part, 540, currentY, 860, 72);
 
         currentY += lineCount * 72 + 18;
       });
