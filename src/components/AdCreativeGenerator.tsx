@@ -513,7 +513,7 @@ export default function AdCreativeGenerator({
             </div>
           )}
 
-          {/* Hidden but responsive real canvas container */}
+          {/* Hidden but responsive real canvas container a */}
           <div className="w-full max-w-[420px] aspect-square relative rounded-2xl overflow-hidden shadow-xl border border-slate-200/80 bg-slate-100 flex items-center justify-center">
             <canvas
               ref={canvasRef}
