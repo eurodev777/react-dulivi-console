@@ -3,8 +3,6 @@ import {
   Sparkles,
   Download,
   RefreshCw,
-  Layers,
-  CheckCircle2,
   Image as ImageIcon,
 } from "lucide-react";
 import { CreativeData } from "../types";
@@ -24,10 +22,10 @@ export default function AdCreativeGenerator({
 
   const titles = [
     "DELIVERY",
-    "SITE",
-    "CARDÁPIO",
+    "CARDÁPIO DIGITAL",
     "ANÚNCIOS ON-LINE",
-    "TRÁFEGO PAGO"
+    "TRÁFEGO PAGO",
+    "ANÚNCIOS POR R$300 MENSAL",
   ];
 
   const prices = [
@@ -41,8 +39,8 @@ export default function AdCreativeGenerator({
     },
     {
       value: "GRÁTIS",
-      annual: false
-    }
+      annual: false,
+    },
   ];
 
   const extras = [
@@ -51,102 +49,119 @@ export default function AdCreativeGenerator({
     "+ Tráfego Pago",
     "+ IA para Restaurantes",
     "+ Atendente Virtual",
-    "+ Pagamento Online"
+    "+ Pagamento Online",
   ];
 
+  // Descrição fixa do novo plano de anúncios
+  const anunciosDescricao =
+    "TRAFEGO PAGO - 8 POSTS POR MES - SITE COMPLETO HOSPEDAGEM INCLUSA";
+
+  // Paleta bem maior para cada criativo sair com uma identidade diferente
   const backgrounds = [
-    // 1. Pastéis Distintos (Suaves)
-    "#FFB3BA", // Rosa pastel
-    "#FFDFBA", // Pêssego/Laranja pastel
-    "#FFFFBA", // Amarelo pastel
-    "#BAFFC9", // Verde menta pastel
-    "#BAE1FF", // Azul bebê
-    "#E2CBF7", // Lilás suave
-    "#FFC4E1", // Chiclete claro
-    "#C4FAF8", // Ciano bem claro
+    // Pastéis
+    "#FFB3BA", "#FFDFBA", "#FFFFBA", "#BAFFC9", "#BAE1FF",
+    "#E2CBF7", "#FFC4E1", "#C4FAF8", "#FFD6E0", "#D7F9F1",
+    "#FDE2E4", "#E2ECE9", "#BEE1E6", "#F0EFEB", "#DFE7FD",
 
-    // 2. Tons Terrosos e Boho (Modernos)
-    "#264653", // Azul petróleo escuro
-    "#2A9D8F", // Verde esmeralda suave
-    "#E9C46A", // Amarelo mostarda
-    "#F4A261", // Laranja areia
-    "#E76F51", // Terracota / Coral escuro
-    "#A3B18A", // Verde militar claro
-    "#DDA15E", // Caramelo
-    "#BC6C25", // Marrom madeira
+    // Vermelhos, rosas e magentas
+    "#E63946", "#D90429", "#EF233C", "#FF0054", "#FF006E",
+    "#E91E63", "#C9184A", "#A4133C", "#B5179E", "#F72585",
+    "#9D4EDD", "#C77DFF", "#FF4D6D", "#FF758F", "#FF8FA3",
 
-    // 3. Vibrantes e Vivas (Material Design)
-    "#F44336", // Vermelho forte
-    "#9C27B0", // Roxo vivo
-    "#2196F3", // Azul vibrante
-    "#00BCD4", // Ciano (Turquesa)
-    "#4CAF50", // Verde bandeira
-    "#FFEB3B", // Amarelo vivo
-    "#FF9800", // Laranja vivo
-    "#E91E63", // Pink
+    // Laranjas, amarelos e dourados
+    "#FB8500", "#FF7B00", "#FF8800", "#FF9505", "#F48C06",
+    "#F77F00", "#FFB703", "#FFC300", "#FFD60A", "#FFEA00",
+    "#E9C46A", "#F4A261", "#DDA15E", "#E85D04", "#DC2F02",
 
-    // 4. Mix de Frios e Quentes (Saturação média)
-    "#8ECAE6", // Azul céu
-    "#219EBC", // Azul cerúleo
-    "#023047", // Azul noite (muito escuro)
-    "#FFB703", // Amarelo gema
-    "#FB8500", // Laranja tangerina
-    "#8338EC", // Roxo elétrico
-    "#FF006E", // Rosa neon
-    "#3A86FF", // Azul royal
+    // Verdes
+    "#06D6A0", "#00B894", "#2A9D8F", "#40916C", "#52B788",
+    "#74C69D", "#95D5B2", "#2D6A4F", "#1B4332", "#4CAF50",
+    "#43AA8B", "#90BE6D", "#A7C957", "#588157", "#3A5A40",
 
-    // 5. Cores Escuras (Estilo Dark Mode)
-    "#1A1A2E", // Azul marinho profundo
-    "#16213E", // Azul noturno
-    "#0F3460", // Azul intermediário escuro
-    "#E94560", // Rosa avermelhado escuro
-    "#2C3E50", // Cinza azulado
-    "#27AE60", // Verde musgo escuro
-    "#8E44AD", // Roxo escuro
-    "#D35400", // Abóbora escuro
+    // Azuis e cianos
+    "#00B4D8", "#0096C7", "#0077B6", "#023E8A", "#03045E",
+    "#2196F3", "#3A86FF", "#4361EE", "#4895EF", "#4CC9F0",
+    "#118AB2", "#277DA1", "#577590", "#8ECAE6", "#219EBC",
+
+    // Roxos
+    "#7209B7", "#560BAD", "#480CA8", "#3A0CA3", "#8338EC",
+    "#7B2CBF", "#5A189A", "#4A148C", "#6A4C93", "#8E44AD",
+    "#9C27B0", "#6C63FF", "#5E60CE", "#6930C3", "#7400B8",
+
+    // Escuros
+    "#0B132B", "#1C2541", "#1A1A2E", "#16213E", "#0F3460",
+    "#111827", "#1F2937", "#0F172A", "#18181B", "#27272A",
+    "#2C3E50", "#263238", "#212121", "#001219", "#14213D",
+
+    // Terrosos e sofisticados
+    "#264653", "#E76F51", "#BC6C25", "#9C6644", "#7F5539",
+    "#B08968", "#6F4E37", "#8D6E63", "#A98467", "#6B705C",
+    "#A5A58D", "#CB997E", "#D4A373", "#B56576", "#355070",
+
+    // Neon / alto impacto
+    "#FF003C", "#00F5D4", "#00BBF9", "#F15BB5", "#FEE440",
+    "#9B5DE5", "#00F0FF", "#39FF14", "#FF3131", "#FF10F0",
+    "#7DF9FF", "#CCFF00", "#FF5F1F", "#FE019A", "#7CFF01",
   ];
+
+  const lastBackgroundRef = useRef<string>("");
+
+  const getRandomBackground = () => {
+    let next = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+
+    // Evita repetir exatamente a mesma cor em dois criativos seguidos
+    if (backgrounds.length > 1) {
+      while (next === lastBackgroundRef.current) {
+        next = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+      }
+    }
+
+    lastBackgroundRef.current = next;
+    return next;
+  };
 
   const generateNewCreative = () => {
+    setLoading(true);
+    setAdLayoutType((current) => current + 1);
+
     const title = titles[Math.floor(Math.random() * titles.length)];
 
-    // Se for SITE, usa dados fixos
-    if (title === "SITE") {
+    // Novo pacote mensal: título e descrição SEMPRE fixos
+    if (title === "ANÚNCIOS POR R$300 MENSAL") {
       setCreative({
         title,
-        price: { value: "R$ 90,00" },
-        extra: "Entregue em 7 dias",
-        background: backgrounds[Math.floor(Math.random() * backgrounds.length)],
+        price: {
+          value: "R$ 300,00",
+          annual: false,
+        },
+        extra: anunciosDescricao,
+        background: getRandomBackground(),
       });
 
       return;
     }
-    if (title === "ANÚNCIOS ON-LINE") {
+
+    // Mantém os planos que já existiam
+    if (title === "ANÚNCIOS ON-LINE" || title === "TRÁFEGO PAGO") {
       setCreative({
         title,
-        price: { value: "R$ 97,00" },
+        price: {
+          value: "R$ 97,00",
+          annual: false,
+        },
         extra: "Plano de 15 dias",
-        background: backgrounds[Math.floor(Math.random() * backgrounds.length)],
-      });
-
-      return;
-    }
-    if (title === "TRÁFEGO PAGO") {
-      setCreative({
-        title,
-        price: { value: "R$ 97,00" },
-        extra: "Plano de 15 dias",
-        background: backgrounds[Math.floor(Math.random() * backgrounds.length)],
+        background: getRandomBackground(),
       });
 
       return;
     }
 
-    // Demais serviços
+    // DELIVERY e CARDÁPIO DIGITAL continuam funcionando normalmente
     setCreative({
       title,
       price: prices[Math.floor(Math.random() * prices.length)],
       extra: extras[Math.floor(Math.random() * extras.length)],
-      background: backgrounds[Math.floor(Math.random() * backgrounds.length)],
+      background: getRandomBackground(),
     });
   };
 
@@ -200,7 +215,7 @@ export default function AdCreativeGenerator({
       }
 
       // 3. Draw stylized geometric ambient details
-      ctx.strokeStyle = `${creative.accentColor}33`; // 20% opacity matching accent
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.stroke();
@@ -230,84 +245,163 @@ export default function AdCreativeGenerator({
     }
   }, [creative, bgImageUrl, adLayoutType]);
 
-  const drawMinimalAd = (ctx, data) => {
+  const drawMinimalAd = (
+    ctx: CanvasRenderingContext2D,
+    data: CreativeData,
+  ) => {
     ctx.fillStyle = data.background;
     ctx.fillRect(0, 0, 1080, 1080);
 
     ctx.textAlign = "center";
+    ctx.textBaseline = "alphabetic";
 
-    // --- CONFIGURAÇÃO DA SOMBRA E BORDA PADRÃO ---
-    // Uma leve sombra escura para dar profundidade
-    ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+    // Sombra + contorno para manter boa leitura em qualquer cor de fundo
+    ctx.shadowColor = "rgba(0, 0, 0, 0.75)";
     ctx.shadowBlur = 8;
     ctx.shadowOffsetX = 3;
     ctx.shadowOffsetY = 3;
-
-    // Configuração da borda (Stroke) - Branca para proteger a letra de fundos escuros/iguais
     ctx.strokeStyle = "#000";
-    ctx.lineWidth = 20; // Grossura da borda (pode ajustar se achar muito grossa)
-    ctx.lineJoin = "round"; // Deixa os cantos da borda arredondados
+    ctx.lineWidth = 18;
+    ctx.lineJoin = "round";
 
-    // Função auxiliar para desenhar o texto com a borda
-    // Ela desenha a borda primeiro e pinta a cor principal por cima
-    const drawTextWithOutline = (text, x, y) => {
-      ctx.strokeText(text, x, y); // Desenha a borda branca (com sombra)
-
-      // Desliga a sombra rapidamente apenas para o miolo da letra não ficar borrado
+    const drawTextWithOutline = (
+      text: string,
+      x: number,
+      y: number,
+    ) => {
+      ctx.strokeText(text, x, y);
       ctx.shadowColor = "transparent";
-      ctx.fillText(text, x, y); // Pinta a cor principal por dentro
-
-      // Religa a sombra para o próximo texto
+      ctx.fillText(text, x, y);
       ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
     };
 
-    ctx.fillStyle = "#fff";
+    // Desenha texto quebrando automaticamente quando ficar largo demais
+    const drawWrappedText = (
+      text: string,
+      x: number,
+      startY: number,
+      maxWidth: number,
+      lineHeight: number,
+    ) => {
+      const words = text.split(" ");
+      const lines: string[] = [];
+      let currentLine = "";
 
-    if (data.title === "SITE") {
-      // Seu SITE na mesma linha
-      ctx.font = '900 150px "Roboto"';
-      drawTextWithOutline("Seu SITE", 540, 230);
-    } else {
-      // Seu em cima e o restante embaixo
-      ctx.font = '900 120px "Roboto"';
-      drawTextWithOutline("Seu", 540, 150);
+      for (const word of words) {
+        const testLine = currentLine ? `${currentLine} ${word}` : word;
 
-      ctx.font = '900 170px "Roboto"';
-      drawTextWithOutline(data.title, 540, 320);
+        if (ctx.measureText(testLine).width > maxWidth && currentLine) {
+          lines.push(currentLine);
+          currentLine = word;
+        } else {
+          currentLine = testLine;
+        }
+      }
+
+      if (currentLine) {
+        lines.push(currentLine);
+      }
+
+      lines.forEach((line, index) => {
+        drawTextWithOutline(line, x, startY + index * lineHeight);
+      });
+
+      return lines.length;
+    };
+
+    // ==========================================================
+    // NOVO PACOTE: ANÚNCIOS POR R$300 MENSAL
+    // ==========================================================
+    if (data.title === "ANÚNCIOS POR R$300 MENSAL") {
+      ctx.fillStyle = "#FFFFFF";
+
+      ctx.font = '900 145px "Roboto"';
+      drawTextWithOutline("ANÚNCIOS", 540, 185);
+
+      ctx.fillStyle = "#FFE600";
+      ctx.font = '900 155px "Roboto"';
+      drawTextWithOutline("POR R$300", 540, 360);
+
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = '900 130px "Roboto"';
+      drawTextWithOutline("MENSAL", 540, 515);
+
+      // Faixa visual para separar título da descrição
+      ctx.shadowColor = "transparent";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.28)";
+      ctx.fillRect(70, 590, 940, 385);
+
+      // A descrição é sempre exatamente a mesma no dado do criativo.
+      // No canvas, os trechos são quebrados em linhas para caber bem.
+      const descriptionParts = data.extra.split(" - ");
+
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = '900 62px "Roboto"';
+
+      let currentY = 690;
+
+      descriptionParts.forEach((part) => {
+        const lineCount = drawWrappedText(
+          part,
+          540,
+          currentY,
+          860,
+          72,
+        );
+
+        currentY += lineCount * 72 + 18;
+      });
+
+      ctx.shadowColor = "transparent";
+      ctx.lineWidth = 1;
+      return;
     }
 
-    // Por apenas
-    ctx.fillStyle = "#fff";
-    ctx.font = '720 105px "Roboto"';
+    // ==========================================================
+    // DEMAIS SERVIÇOS
+    // ==========================================================
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = '900 105px "Roboto"';
+    drawTextWithOutline("Seu", 540, 135);
+
+    if (data.title === "CARDÁPIO DIGITAL") {
+      ctx.font = '900 145px "Roboto"';
+      drawTextWithOutline("CARDÁPIO", 540, 300);
+
+      ctx.fillStyle = "#FFE600";
+      ctx.font = '900 130px "Roboto"';
+      drawTextWithOutline("DIGITAL", 540, 440);
+    } else {
+      ctx.font = '900 130px "Roboto"';
+      drawWrappedText(data.title, 540, 325, 900, 135);
+    }
+
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = '720 92px "Roboto"';
     drawTextWithOutline(
       data.price.value === "GRÁTIS" ? "crie" : "por apenas",
       540,
-      450
+      570,
     );
 
-    // Preço - Usando vermelho vibrante
-    ctx.fillStyle = "#FF003C"; // Troquei para aquele vermelho neon que te passei antes, destaca mais!
-    ctx.font = '900 180px "Roboto"';
-    drawTextWithOutline(data.price.value, 540, 650);
+    ctx.fillStyle = "#FF003C";
+    ctx.font = '900 170px "Roboto"';
+    drawTextWithOutline(data.price.value, 540, 750);
 
-    // extra
     if (data.price.value !== "GRÁTIS") {
-      ctx.fillStyle = "#007AFF"; // Azul
-      ctx.font = '700 70px "Roboto"';
-
+      ctx.fillStyle = "#00D9FF";
+      ctx.font = '800 58px "Roboto"';
       drawTextWithOutline(
         data.price.annual ? "mensais no plano anual" : "mensais",
-        data.price.annual ? 540 : 820,
-        730
+        540,
+        825,
       );
     }
 
-    // Extra final
-    ctx.fillStyle = "#fff"; // Esqueci de resetar a cor, então coloquei preto aqui para garantir
-    ctx.font = '900 90px "Roboto"';
-    drawTextWithOutline(data.extra, 540, 930);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = '900 64px "Roboto"';
+    drawWrappedText(data.extra, 540, 950, 900, 70);
 
-    // Limpa as configurações de sombra e linha no final para não afetar outros desenhos do canvas
     ctx.shadowColor = "transparent";
     ctx.lineWidth = 1;
   };
