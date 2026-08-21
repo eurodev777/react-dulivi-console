@@ -21,9 +21,7 @@ export default function AdCreativeGenerator({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const titles = [
-    "DELIVERY",
     "CARDÁPIO DIGITAL",
-    "ANÚNCIOS ON-LINE",
     "ANÚNCIOS POR R$300 MENSAL",
   ];
 
@@ -44,7 +42,6 @@ export default function AdCreativeGenerator({
 
   const extras = [
     "+ Robô para WhatsApp",
-    "+ ANÚNCIOS ONLINE",
     "+ IA para Restaurantes",
     "+ Atendente Virtual",
     "+ Pagamento Online",
@@ -139,22 +136,7 @@ export default function AdCreativeGenerator({
       return;
     }
 
-    // Mantém o plano de ANÚNCIOS ON-LINE que já existia
-    if (title === "ANÚNCIOS ON-LINE") {
-      setCreative({
-        title,
-        price: {
-          value: "R$ 97,00",
-          annual: false,
-        },
-        extra: "Plano de 15 dias",
-        background: getRandomBackground(),
-      });
-
-      return;
-    }
-
-    // DELIVERY e CARDÁPIO DIGITAL continuam funcionando normalmente
+    // CARDÁPIO DIGITAL continua funcionando normalmente
     setCreative({
       title,
       price: prices[Math.floor(Math.random() * prices.length)],
