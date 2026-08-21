@@ -13,10 +13,10 @@ export default function CopySection({ onShowToast }: CopySectionProps) {
   const [copiedDesc, setCopiedDesc] = useState(false);
   const [copiedAll, setCopiedAll] = useState(false);
 
-  const title1 = "Site + Hospedagem + Domínio";
-  const title2 = "Cardápio Digital";
-  const title3 = "Cardápio Digital + Robô para WhatsApp";
-  const title4 = "Cardápio Digital + Atendente Virtual";
+  const title1 = "Cardápio Digital + Atendente Virtual";
+  const title2 = "Anuncie sua empresa";
+  const title3 = "Cardápio Digital";
+  const title4 = "Site + Hospedagem + Domínio";
   const desc = `
 WhatsApp: (13) 99102-7026
 
