@@ -20,7 +20,10 @@ export default function AdCreativeGenerator({
   const [adLayoutType, setAdLayoutType] = useState<number>(0); // alternate between different visual layouts for variety
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const titles = ["CARDÁPIO DIGITAL", "ANÚNCIOS POR R$300 MENSAL"];
+  const titles = [
+    "CARDÁPIO DIGITAL", 
+    // "ANÚNCIOS POR R$300 MENSAL"
+  ];
 
   const prices = [
     {
